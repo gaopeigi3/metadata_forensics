@@ -1,78 +1,85 @@
-# Metadata Forensics：B01–B05 Python 项目
+# Metadata Forensics: B01–B05 Python Project
 
-将提供的五份 notebook 重构为可导入模块和命令行程序。运行不需要 Jupyter、IPython 或原始 notebook；原文件未改动。文档中的指令作为实验资料保留，不作为本次操作授权。
+This project refactors the five supplied notebooks into importable Python modules and command-line workflows. It runs without Jupyter, IPython, or the original notebooks. The original files are preserved. Instructions in the source documents are retained as experimental reference material.
 
-## 安装与运行
+## Installation and Usage
 
-在本项目目录运行（Python 3.10+）：
+Run these commands from the project directory (Python 3.10+):
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
 
-# B01：40 人、无时间范围 blocking
+# B01: 40 patients, without activity-range blocking
 metadata-forensics b01
 
-# B02：4000 人，四种方法；只运行冻结基线可加 --methods nearest
+# B02: 4,000 patients, four methods; add --methods nearest for the frozen baseline only
 metadata-forensics b02
 
-# B03：10 个主实验条件 + 3 个独立 fragmentation 诊断
+# B03: 10 main experimental conditions + 3 separate fragmentation diagnostics
 metadata-forensics b03
 
-# B04：默认三个条件；--full 扩展为十个条件
+# B04: three conditions by default; add --full to run all ten
 metadata-forensics b04
 
-# B05：离线准备证据与提示词，不生成假的模型报告
+# B05: prepare evidence and prompts offline; no model report is generated
 metadata-forensics b05 --case outputs/b04/example_investigation.json
 
-# 显式调用模型；先在环境变量中设置 DEEPSEEK_API_KEY
+# Call the model explicitly; first set DEEPSEEK_API_KEY in your environment
 metadata-forensics b05 --case outputs/b04/example_investigation.json --live --provider deepseek
 ```
 
-`python -m metadata_forensics` 与 `metadata-forensics` 等价。尚未安装包时，也可在项目根目录用 `PYTHONPATH=src python -m metadata_forensics ...`。
+`python -m metadata_forensics` is equivalent to `metadata-forensics`. Before installing the package, you can also run `PYTHONPATH=src python -m metadata_forensics ...` from the project root.
 
-快速检查可给 B02–B04 加 `--n-patients 40`。这只是运行检查，不是 N=4000 的正式研究结果。默认种子 42，可用 `--seed` 修改。`--output` 指定输出目录；重复使用同一目录会覆盖同名结果，建议不同配置使用不同目录。
+For a quick smoke test, add `--n-patients 40` to B02–B04. These small runs verify execution and do not represent the N=4,000 benchmark. The default seed is 42; use `--seed` to change it. Use `--output` to choose an output directory. Reusing a directory overwrites files with the same names, so use separate directories for different configurations.
 
-B05 支持 `--provider deepseek|openai|ollama`、`--model`，兼容环境变量 `B05_PROVIDER`、`B05_MODEL`、`B05_BASE_URL`。OpenAI 使用 `OPENAI_API_KEY`，Ollama 不需要密钥。模型和端点默认值沿用源 notebook，未验证当前服务可用性。找不到 `--case` 时直接报错，不会替换成演示病例。
+B05 supports `--provider deepseek|openai|ollama` and `--model`, along with the environment variables `B05_PROVIDER`, `B05_MODEL`, and `B05_BASE_URL`. OpenAI uses `OPENAI_API_KEY`; Ollama requires no API key. Default models and endpoints are inherited from the source notebook, and their current service availability has not been verified. A missing `--case` file raises an error rather than falling back to a demonstration case.
 
-## 目录与职责
+## Project Structure
 
 ```text
 src/metadata_forensics/
-  synthetic.py       合成数据；保持原始随机数调用顺序
-  matching.py        时间范围 blocking、四种评分与排序
-  corruption.py      日期偏移、缺失、错配、ID fragmentation
-  evaluation.py      全体真值分母、可观测性、alias-aware 指标
-  investigation.py   top-two 反事实、事件定位、确定性证据报告
-  reporting.py       证据白名单、模型调用、输出校验与审计
-  pipeline.py        B01–B04 流程编排、CSV/JSON/PNG 输出
-  cli.py             命令行入口
-  __main__.py        python -m 入口
-tests/               回归与边界检查
-docs/                原始实验说明、来源哈希、迁移及验证记录
-validation/          本次实际运行的指标与离线证据样例
+  synthetic.py       Synthetic data; preserves the original random draw order
+  matching.py        Activity-range blocking, four scoring methods, and ranking
+  corruption.py      Date shifts, missing events, wrong assignments, ID fragmentation
+  evaluation.py      All-ground-truth denominators, observability, alias-aware metrics
+  investigation.py   Top-two counterfactuals, event localization, evidence reports
+  reporting.py       Evidence allowlist, model calls, output validation, and auditing
+  pipeline.py        B01–B04 orchestration and CSV/JSON/PNG output
+  cli.py             Command-line interface
+  __main__.py        Entry point for python -m
+tests/               Regression and edge-case checks
+docs/                Original experiment notes, source hashes, migration and validation records
+validation/          Metrics and offline evidence examples from the validation runs
 ```
 
-主要输出：B01/B02 的 `metrics.csv`、各方法 `*_top10.csv`；B03 的 `b03_results.csv`、`fragmentation_diagnostic.csv` 和退化曲线；B04 的决策表、事件怀疑度、review 分组诊断、定位图与 `*_investigation.json`；B05 的 `prepared_evidence.json`，或 live 模式下的审计 JSON 与 Markdown 报告。中间条件完成即保存 `*_results_partial.csv`，但目前不支持自动断点续跑。
+Main outputs:
 
-真值 crosswalk、corruption manifest 与逐身份评估放在 `evaluation_only/`。匹配器只接受观测数据，LLM 只接受白名单证据字段。`MATCH` 沿用上游启发式决策，不代表身份已被确认，也不自动修改任何原始记录。
+- **B01/B02:** `metrics.csv` and method-specific `*_top10.csv` files.
+- **B03:** `b03_results.csv`, `fragmentation_diagnostic.csv`, and performance degradation plots.
+- **B04:** decision tables, event suspicion scores, diagnostics grouped by review status, localization plots, and `*_investigation.json` files.
+- **B05:** `prepared_evidence.json` in offline mode, or an audit JSON bundle and a Markdown report in live mode.
 
-## 保留的实验定义与限制
+Completed conditions are saved incrementally to `*_results_partial.csv`. Automatic resumption is not currently supported.
 
-- B02–B04：30 天范围 blocking、±2 天命中、同日 PB/BM 合并为一个时间事件。
-- B02c 保留 `alignment_cost` 排序项；B02d 从 sequence alignment 的结果估计全局背景命中率。
-- 排名平局统一采用 `lab_id` 升序，与 B03/B04 一致；N=4000、seed=42 的 B02a 与原文全部主要指标一致。
-- B03 主循环实际是 10 个条件，另有 3 个 fragmentation 诊断；原 notebook 标题把主循环写成 13，已在使用说明中澄清。
-- B04 衡量原始 top-two 候选之间的删日期敏感性，不是完整候选集的重新匹配。没有第二候选时 instability 缺失并进入 REVIEW。
-- 事件定位只覆盖当前 top-1 配对中的可见样本；不能定位被删除的行。稳定性、margin 及 `MATCH` 都不是校准概率。
-- 模型校验覆盖结构、候选顺序、样本归属与证据角色，不能证明自然语言陈述完全正确。
-- 默认使用完整候选表，N=4000 的各方法和多条件实验耗时、占用内存明显高于 40 人检查。
+Ground-truth crosswalks, corruption manifests, and per-identity evaluations are stored in `evaluation_only/`. The matcher receives observed data only; the LLM receives only allowlisted evidence fields. `MATCH` preserves the upstream heuristic decision: it does not certify identity or automatically modify source records.
 
-## 测试
+## Preserved Experimental Definitions and Limitations
+
+- B02–B04 use a 30-day activity-range buffer and a ±2-day hit tolerance. PB/BM samples collected on the same date are collapsed into one temporal event.
+- B02c retains `alignment_cost` as a ranking criterion. B02d estimates the global background hit probability from sequence-alignment results.
+- Ranking ties are resolved by ascending `lab_id`, consistent with B03/B04. At N=4,000 and seed=42, B02a reproduces all principal metrics reported in the original baseline document.
+- B03 has 10 main conditions and 3 separate fragmentation diagnostics. The original notebook heading described the main loop as having 13 conditions; this distinction is clarified here.
+- B04 measures sensitivity to deleting dates within the original top-two candidate set; it does not rerank the full candidate set. When there is no second candidate, instability is undefined and the case is assigned to REVIEW.
+- Event localization covers only observed samples in current top-1 pairings. Deleted rows cannot be localized. Stability, margin, and `MATCH` are not calibrated probabilities.
+- Model output checks cover structure, candidate order, sample membership, and evidence roles. They cannot establish the factual accuracy of every natural-language statement.
+- The pipeline retains the full candidate table. N=4,000 runs, particularly across multiple methods or conditions, require substantially more time and memory than 40-patient smoke tests.
+
+## Tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-实际验证范围与版本见 [验证记录](docs/VALIDATION.md)，迁移说明见 [迁移记录](docs/MIGRATION.md)。
+See the [validation record](docs/VALIDATION.md) for the actual validation scope and dependency versions, and the [migration record](docs/MIGRATION.md) for implementation changes. These supporting records remain in Chinese.
