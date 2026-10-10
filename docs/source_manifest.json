@@ -1,0 +1,22 @@
+[
+  {
+    "file": "baseline01.ipynb",
+    "sha256": "3d57501f12197a043245f37137b68dce4c7ef9b1718a9ed107bb7f109ceff262"
+  },
+  {
+    "file": "baseline02.ipynb",
+    "sha256": "d205c8b4292d38a34e5ca1199851894ff5a6080d40f4c1108dd043625fe00620"
+  },
+  {
+    "file": "B03_Controlled_Corruption.ipynb",
+    "sha256": "9e13d0c33b5c3e0ad9584f5d41a01e93f568efa1025a2985b83badccb25f3213"
+  },
+  {
+    "file": "B04_Counterfactual_Evidence_Reliability.ipynb",
+    "sha256": "dfb2b3e0f73247712eaa4e7a5b6fe9750f3b77e6e3319d40f628a30006d2d4a4"
+  },
+  {
+    "file": "B05_LLM_Forensic_Investigation.ipynb",
+    "sha256": "4db5c655dfb3ca4146da6e30411e68053e6281452699e91832afdb3785356911"
+  }
+]

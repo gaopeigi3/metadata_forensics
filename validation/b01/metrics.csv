@@ -1,0 +1,2 @@
+method,n_gt,n_lab_observable,n_unobservable,n_blocked_out,lab_observable_rate,retrieval_rate,blocking_recall_given_observable,top1,top3,top10,mrr,top1_given_retrieved
+nearest,40,39,1,0,0.975,0.975,1.0,0.975,0.975,0.975,0.975,1.0

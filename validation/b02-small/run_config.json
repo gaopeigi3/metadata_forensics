@@ -1,0 +1,10 @@
+{
+  "stage": "b02",
+  "n_patients": 40,
+  "seed": 42,
+  "full": false,
+  "methods": null,
+  "tie_break": "lab_id ascending",
+  "buffer_days": 30,
+  "tolerance_days": 2
+}

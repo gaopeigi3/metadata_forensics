@@ -1,0 +1,83 @@
+{
+  "clinical_id": "UPIN130",
+  "decision": "REVIEW",
+  "top_candidates": [
+    {
+      "lab_id": "P040",
+      "rank": 1,
+      "hit_rate": 1.0,
+      "hits": 2,
+      "evidence": [
+        {
+          "sample_id": "S0078",
+          "collection_date": "2018-03-24",
+          "nearest_visit_distance_days": 0,
+          "role": "support"
+        },
+        {
+          "sample_id": "S0079",
+          "collection_date": "2018-03-24",
+          "nearest_visit_distance_days": 0,
+          "role": "support"
+        },
+        {
+          "sample_id": "S0080",
+          "collection_date": "2018-05-19",
+          "nearest_visit_distance_days": 2,
+          "role": "support"
+        },
+        {
+          "sample_id": "S0081",
+          "collection_date": "2018-05-19",
+          "nearest_visit_distance_days": 2,
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "lab_id": "P028",
+      "rank": 2,
+      "hit_rate": 1.0,
+      "hits": 1,
+      "evidence": [
+        {
+          "sample_id": "S0044",
+          "collection_date": "2018-05-17",
+          "nearest_visit_distance_days": 0,
+          "role": "support"
+        }
+      ]
+    },
+    {
+      "lab_id": "P050",
+      "rank": 3,
+      "hit_rate": 0.3333333333333333,
+      "hits": 1,
+      "evidence": [
+        {
+          "sample_id": "S0121",
+          "collection_date": "2017-12-09",
+          "nearest_visit_distance_days": 105,
+          "role": "contradiction"
+        },
+        {
+          "sample_id": "S0122",
+          "collection_date": "2018-05-26",
+          "nearest_visit_distance_days": 9,
+          "role": "contradiction"
+        },
+        {
+          "sample_id": "S0123",
+          "collection_date": "2018-06-28",
+          "nearest_visit_distance_days": 2,
+          "role": "support"
+        }
+      ]
+    }
+  ],
+  "critical_dates": [
+    "2018-03-24",
+    "2018-05-19"
+  ],
+  "recommended_action": "Verify source sample accession dates and patient assignment; compare original clinical encounter records."
+}

@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "provider": "deepseek",
+    "model": "deepseek-chat",
+    "source": "/tmp/forensics-validation/b04/example_investigation.json",
+    "generated_at_utc": "2026-10-10T21:30:17.604771+00:00",
+    "live": false
+  },
+  "input_evidence": {
+    "clinical_id": "UPIN130",
+    "critical_dates": [
+      "2018-03-24",
+      "2018-05-19"
+    ],
+    "top_candidates": [
+      {
+        "lab_id": "P040",
+        "rank": 1,
+        "hit_rate": 1.0,
+        "hits": 2,
+        "evidence": [
+          {
+            "sample_id": "S0078",
+            "collection_date": "2018-03-24",
+            "nearest_visit_distance_days": 0,
+            "role": "support"
+          },
+          {
+            "sample_id": "S0079",
+            "collection_date": "2018-03-24",
+            "nearest_visit_distance_days": 0,
+            "role": "support"
+          },
+          {
+            "sample_id": "S0080",
+            "collection_date": "2018-05-19",
+            "nearest_visit_distance_days": 2,
+            "role": "support"
+          },
+          {
+            "sample_id": "S0081",
+            "collection_date": "2018-05-19",
+            "nearest_visit_distance_days": 2,
+            "role": "support"
+          }
+        ]
+      },
+      {
+        "lab_id": "P028",
+        "rank": 2,
+        "hit_rate": 1.0,
+        "hits": 1,
+        "evidence": [
+          {
+            "sample_id": "S0044",
+            "collection_date": "2018-05-17",
+            "nearest_visit_distance_days": 0,
+            "role": "support"
+          }
+        ]
+      },
+      {
+        "lab_id": "P050",
+        "rank": 3,
+        "hit_rate": 0.3333333333333333,
+        "hits": 1,
+        "evidence": [
+          {
+            "sample_id": "S0121",
+            "collection_date": "2017-12-09",
+            "nearest_visit_distance_days": 105,
+            "role": "contradiction"
+          },
+          {
+            "sample_id": "S0122",
+            "collection_date": "2018-05-26",
+            "nearest_visit_distance_days": 9,
+            "role": "contradiction"
+          },
+          {
+            "sample_id": "S0123",
+            "collection_date": "2018-06-28",
+            "nearest_visit_distance_days": 2,
+            "role": "support"
+          }
+        ]
+      }
+    ],
+    "recommended_action": "Verify source sample accession dates and patient assignment; compare original clinical encounter records.",
+    "decision": "REVIEW"
+  },
+  "system_prompt": "你是一名临床数据治理与实体对齐的取证报告撰写助手。\n你只能使用用户提供的 JSON 作为事实来源。不得臆造患者属性、临床诊断、实验室事件、日期、外部来源或已确认的错误。\n候选排名是上游 B02/B04 的结果；不要重新排序或改写上游 decision。\n时间一致性只表示支持关联的线索，不证明身份相同；时间矛盾也不证明数据被污染。\n重要：一个 sample ID 只能来自输入；不要把相同日期的多个样本视为独立的身份确认。\n用简体中文写清晰、克制、可供人工审计的报告。\n只输出一个合法 JSON 对象，不要 Markdown 代码围栏，不要额外文字。\nJSON 必须包含字段：clinical_id (string), decision (string), summary (string),\ncandidate_assessments (array of objects with lab_id, supporting_sample_ids, contradicting_sample_ids, interpretation),\nuncertainties (array of strings), recommended_checks (array of strings), limitations (array of strings)。\n不要输出概率、置信度百分比或伪造引用。",
+  "user_prompt": "请根据以下上游证据 JSON 撰写可审计的取证报告。不要添加输入中不存在的事实：\n{\n  \"clinical_id\": \"UPIN130\",\n  \"critical_dates\": [\n    \"2018-03-24\",\n    \"2018-05-19\"\n  ],\n  \"top_candidates\": [\n    {\n      \"lab_id\": \"P040\",\n      \"rank\": 1,\n      \"hit_rate\": 1.0,\n      \"hits\": 2,\n      \"evidence\": [\n        {\n          \"sample_id\": \"S0078\",\n          \"collection_date\": \"2018-03-24\",\n          \"nearest_visit_distance_days\": 0,\n          \"role\": \"support\"\n        },\n        {\n          \"sample_id\": \"S0079\",\n          \"collection_date\": \"2018-03-24\",\n          \"nearest_visit_distance_days\": 0,\n          \"role\": \"support\"\n        },\n        {\n          \"sample_id\": \"S0080\",\n          \"collection_date\": \"2018-05-19\",\n          \"nearest_visit_distance_days\": 2,\n          \"role\": \"support\"\n        },\n        {\n          \"sample_id\": \"S0081\",\n          \"collection_date\": \"2018-05-19\",\n          \"nearest_visit_distance_days\": 2,\n          \"role\": \"support\"\n        }\n      ]\n    },\n    {\n      \"lab_id\": \"P028\",\n      \"rank\": 2,\n      \"hit_rate\": 1.0,\n      \"hits\": 1,\n      \"evidence\": [\n        {\n          \"sample_id\": \"S0044\",\n          \"collection_date\": \"2018-05-17\",\n          \"nearest_visit_distance_days\": 0,\n          \"role\": \"support\"\n        }\n      ]\n    },\n    {\n      \"lab_id\": \"P050\",\n      \"rank\": 3,\n      \"hit_rate\": 0.3333333333333333,\n      \"hits\": 1,\n      \"evidence\": [\n        {\n          \"sample_id\": \"S0121\",\n          \"collection_date\": \"2017-12-09\",\n          \"nearest_visit_distance_days\": 105,\n          \"role\": \"contradiction\"\n        },\n        {\n          \"sample_id\": \"S0122\",\n          \"collection_date\": \"2018-05-26\",\n          \"nearest_visit_distance_days\": 9,\n          \"role\": \"contradiction\"\n        },\n        {\n          \"sample_id\": \"S0123\",\n          \"collection_date\": \"2018-06-28\",\n          \"nearest_visit_distance_days\": 2,\n          \"role\": \"support\"\n        }\n      ]\n    }\n  ],\n  \"recommended_action\": \"Verify source sample accession dates and patient assignment; compare original clinical encounter records.\",\n  \"decision\": \"REVIEW\"\n}"
+}

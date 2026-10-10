@@ -1,0 +1,12 @@
+{
+  "stage": "b02",
+  "n_patients": 4000,
+  "seed": 42,
+  "full": false,
+  "methods": [
+    "nearest"
+  ],
+  "tie_break": "lab_id ascending",
+  "buffer_days": 30,
+  "tolerance_days": 2
+}
